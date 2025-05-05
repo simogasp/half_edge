@@ -20,6 +20,11 @@ struct vertex
     bool is_border{false};
     /// halfedge incident to the vertex, vertex is the origin of the halfedge
     index incident_halfedge{};
+
+    vertex() = default;
+
+    vertex(double x_coord, double y_coord)
+        : x(x_coord), y(y_coord) {}
 };
 
 struct half_edge
