@@ -48,9 +48,9 @@ if(BUILD_TESTS)
     list(APPEND MY_COMPILE_DEFINITIONS "-DHE_BUILD_TESTS")
 endif()
 
-set(LIB_SOURCE_FILES Triangulation.cpp)
+set(LIB_SOURCE_FILES Triangulation.cpp model_io.cpp)
 
-set(LIB_HEADER_FILES Triangulation.hpp)
+set(LIB_HEADER_FILES Triangulation.hpp model_io.hpp)
 
 set(LIBRARY_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 add_library(halfedges ${LIB_SOURCE_FILES} ${LIB_HEADER_FILES})
@@ -69,6 +69,7 @@ if(BUILD_TESTS)
 #     add_boost_test(SOURCE tests/basic_test.cpp LINK halfedges PREFIX half_edges)
 # #    add_boost_test(SOURCE src/tests/interpolation_test.cpp LINK curves PREFIX curves)
 # #    add_boost_test(SOURCE src/tests/point_test.cpp LINK curves PREFIX curves)
-
-
+    enable_testing()
+    include(CTest)
+    add_subdirectory(tests)
 endif()

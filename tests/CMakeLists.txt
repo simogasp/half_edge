@@ -1,4 +1,3 @@
-enable_testing()
 find_package(Catch2 3.8 QUIET)
 if (NOT Catch2_FOUND)
     message(STATUS "Catch2 not found, downloading...")
@@ -11,13 +10,12 @@ if (NOT Catch2_FOUND)
     FetchContent_MakeAvailable(Catch2)
 endif ()
 
-add_executable(basic_test basic_test.cpp)
-target_link_libraries(basic_test PRIVATE Catch2::Catch2WithMain halfedges)
+add_executable(model_io_test model_io_test.cpp)
+target_link_libraries(model_io_test PRIVATE Catch2::Catch2WithMain halfedges)
 
 
 list(APPEND CMAKE_MODULE_PATH ${catch2_SOURCE_DIR}/extras)
-include(CTest)
 include(Catch)
-catch_discover_tests(basic_test)
+catch_discover_tests(model_io_test)
 
-add_test(NAME he_basic_test COMMAND basic_test)
+add_test(NAME he_model_io_test COMMAND model_io_test)

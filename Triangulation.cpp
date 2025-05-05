@@ -1,4 +1,5 @@
 #include "Triangulation.hpp"
+#include "model_io.hpp"
 
 #include <fstream>
 #include <iostream>
@@ -216,84 +217,7 @@ index Triangulation::CW_edge_to_vertex(index e) const
     return m_half_edges.at(twn).next;
 }
 
-void read_OFFfile(const std::string& name, std::vector<vertex>& m_vertices, std::vector<index>& faces)
-{
-    // Read the OFF file
-    std::string line;
-    std::ifstream off_file(name);
-    std::string tmp;
-    std::size_t n_vertices{0};
-    std::size_t n_faces{0};
 
-    if(!off_file.is_open())
-    {
-        std::cerr << "unable to open file " << name << std::endl;
-        throw std::runtime_error("unable to open file");
-    }
 
-    // Check first line is a OFF file
-    while(std::getline(off_file, line))
-    {
-        // add check boundary vertices flag
-        std::istringstream(line) >> tmp;
-        if(tmp.starts_with('#') && !contains_only_whitespaces(line))
-        {
-            if(tmp.starts_with("OFF")) // Check if the format is OFF
-            {
-                break;
-            }
-            std::cerr << "The file is not an OFF file" << std::endl;
-            throw std::runtime_error("The file is not an OFF file");
-        }
-    }
-    // Read the number of vertices and faces
-    while(std::getline(off_file, line))
-    {
-        // add check boundary vertices flag
-        std::istringstream(line) >> tmp;
-        if(tmp[0] != '#' && !contains_only_whitespaces(line))
-        {
-            std::istringstream(line) >> n_vertices >> n_faces;
-            m_vertices.reserve(n_vertices);
-            faces.reserve(3 * n_faces);
-            break;
-        }
-    }
-    // Read vertices
-    index idx{0};
-    while(idx < n_vertices && std::getline(off_file, line))
-    {
-        std::istringstream(line) >> tmp;
-        if(tmp[0] != '#' && !contains_only_whitespaces(line))
-        {
-            double a1;
-            double a2;
-            double a3;
-            std::istringstream(line) >> a1 >> a2 >> a3;
-            m_vertices.emplace_back(a1, a2);
-            idx++;
-        }
-    }
-    // Read faces
-    idx = 0;
-    while(idx < n_faces && std::getline(off_file, line))
-    {
-        std::istringstream(line) >> tmp;
-        if(is_line_to_skip(tmp))
-        {
-            continue;
-        }
-        std::size_t length;
-        std::size_t t1;
-        std::size_t t2;
-        std::size_t t3;
-        std::istringstream(line) >> length >> t1 >> t2 >> t3;
-        faces.push_back(t1);
-        faces.push_back(t2);
-        faces.push_back(t3);
-        idx++;
-    }
 
-    off_file.close();
-}
 }

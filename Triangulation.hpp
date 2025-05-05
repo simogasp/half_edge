@@ -10,46 +10,7 @@ using _edge = std::pair<index, index>;
 
 constexpr auto NOT_A_TWIN = std::numeric_limits<std::size_t>::max();
 
-constexpr bool is_space_char(char c) noexcept
-{
-    return c == ' ' || c == '\t' || c == '\n' ||
-            c == '\v' || c == '\f' || c == '\r';
-}
 
-/**
- * Checks if the string contains only whitespace characters or is empty.
- * @param[in] s The string view to check
- * @return true if the string contains only whitespace characters or is empty,
- *         false otherwise
- */
-constexpr bool contains_only_whitespaces(std::string_view s) noexcept
-{
-    return std::ranges::all_of(s, is_space_char);
-}
-
-/**
- * Determines if a given string starts with a comment indicator ('#').
- * @param[in] s The string view to check.
- * @return true if the string starts with the comment character ('#'),
- *         false otherwise.
- */
-constexpr bool is_comment_line(std::string_view s) noexcept
-{
-    return s.starts_with("#");
-}
-
-/**
- * Determines if a given line should be skipped based on its contents.
- * A line is considered skippable if it is either a comment line (starts with '#')
- * or contains only whitespace characters.
- *
- * @param[in] s The string view representing the line to check.
- * @return true if the line should be skipped, false otherwise.
- */
-constexpr bool is_line_to_skip(std::string_view s) noexcept
-{
-    return is_comment_line(s) || contains_only_whitespaces(s);
-}
 
 struct vertex
 {
@@ -146,11 +107,11 @@ class Triangulation
     //         false otherwise
     [[nodiscard]] bool is_border_face(index e) { return m_half_edges.at(e).is_border; }
 
-    bool is_border_vertex(int v);
+    bool is_border_vertex(index v);
 
-    int degree(int v);
+    int degree(index v);
 
-    int incident_halfedge(int f);
+    int incident_halfedge(index f);
 
     // return the x coordinate of the vertex v
     [[nodiscard]] auto get_PointX(index v) const { return m_vertices.at(v).x; }
@@ -158,9 +119,5 @@ class Triangulation
     [[nodiscard]] auto get_PointY(index v) const { return m_vertices.at(v).y; }
 };
 
-void read_OFFfile(const std::string& name, std::vector<vertex>& m_vertices, std::vector<index>& faces);
 
-#if defined(HE_BUILD_TESTS)
-#include "helpers_test.hpp"
-#endif
 }
