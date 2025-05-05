@@ -39,6 +39,23 @@ struct half_edge
     index prev{};
     /// whether the halfedge is on the boundary
     bool is_border{false};
+
+    // Default constructor
+    half_edge() = default;
+
+    // Copy constructor
+    half_edge(const half_edge&) = default;
+
+    // Copy assignment operator
+    half_edge& operator=(const half_edge&) = default;
+
+    // If you're using C++11 or later, you might also want to add:
+    // Move constructor
+    half_edge(half_edge&&) noexcept = default;
+
+    // Move assignment operator
+    half_edge& operator=(half_edge&&) noexcept = default;
+
 };
 
 class Triangulation
