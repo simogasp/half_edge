@@ -2,7 +2,7 @@
 
 #include <string>
 #include <vector>
-#include <algorithm>
+#include <limits>
 
 namespace half_edge {
 using index = std::size_t;
