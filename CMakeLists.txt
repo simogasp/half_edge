@@ -32,6 +32,13 @@ set(HE_CXX_FEATURE c_std_${CMAKE_CXX_STANDARD})
 # compile options for all targets depending on the compiler and the system
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang|GNU")
     set(MY_COMPILE_OPTIONS "-Wall;-Wextra;-pedantic;-Wno-comment;-Wshadow;-Wnon-virtual-dtor;-Wpedantic;-Wconversion;-Wmisleading-indentation;-Wsign-conversion;-Wfloat-equal")
+    # Disable stringop-overflow warning in release builds with GCC as probably the compiler's static analysis
+    # is incorrectly flagging a potential buffer overflow during vector reallocation
+    if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+        if(CMAKE_BUILD_TYPE STREQUAL "Release")
+            list(APPEND MY_COMPILE_OPTIONS "-Wno-stringop-overflow")
+        endif()
+    endif()
     if(ENABLE_WARNINGS_AS_ERRORS)
         list(APPEND MY_COMPILE_OPTIONS "-Werror")
     endif()
