@@ -104,7 +104,7 @@ Triangulation::Triangulation(const std::string& OFF_file)
 // Generate interior halfedges using a vector with the faces of the triangulation
 // if an interior half-edge is border, it is mark as border-edge
 // mark border-edges
-void Triangulation::construct_interior_halfEdges_from_faces(std::vector<index>& faces)
+void Triangulation::construct_interior_halfEdges_from_faces(const std::vector<index>& faces)
 {
     auto hash_for_pair = [](const _edge& p) { return std::hash<index>{}(p.first) ^ std::hash<index>{}(p.second); };
 

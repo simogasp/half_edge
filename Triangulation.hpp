@@ -84,7 +84,7 @@ class Triangulation
 
     std::vector<index> read_OFFfile(const std::string& name);
 
-    void construct_interior_halfEdges_from_faces(std::vector<index>& faces);
+    void construct_interior_halfEdges_from_faces(const std::vector<index>& faces);
 
     void construct_exterior_halfEdges();
 
