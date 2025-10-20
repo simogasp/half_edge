@@ -165,6 +165,7 @@ void Triangulation::construct_exterior_halfEdges()
     // with the origin and target inverted and add at the of HalfEdges vector
     // std::cout<<"Size vector: "<<HalfEdges.size()<<std::endl;
     this->n_half_edges = m_half_edges.size();
+    // @FIXME there might be a problem with pushing back and indices as the vector grows and be reallocated
     for(std::size_t i = 0; i < this->n_half_edges; i++)
     {
         if(m_half_edges.at(i).is_border)
@@ -199,7 +200,7 @@ void Triangulation::construct_exterior_halfEdges()
     this->n_half_edges = m_half_edges.size();
 }
 
-// Given a edge with vertex origin v, return the next coutnerclockwise edge of v with v as origin
+// Given an edge with vertex origin v, return the next counterclockwise edge of v with v as origin
 // Input: e is the edge
 // Output: the next counterclockwise edge of v
 index Triangulation::CCW_edge_to_vertex(index e) const
@@ -208,7 +209,7 @@ index Triangulation::CCW_edge_to_vertex(index e) const
     return m_half_edges.at(prv).twin;
 }
 
-// Given a edge with vertex origin v, return the prev clockwise edge of v with v as origin
+// Given an edge with vertex origin v, return the prev clockwise edge of v with v as origin
 // Input: e is the edge
 // Output: the prev clockwise edge of v
 index Triangulation::CW_edge_to_vertex(index e) const
