@@ -17,7 +17,7 @@ target_compile_definitions(model_io_test PUBLIC ${MY_COMPILE_DEFINITIONS})
 target_compile_features(model_io_test PUBLIC ${HE_CXX_FEATURE})
 
 # For Windows: Copy Catch2 DLL next to the test executable
-if(WIN32)
+if(WIN32 AND BUILD_SHARED_LIBS)
     add_custom_command(TARGET model_io_test POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_if_different
         $<TARGET_FILE:Catch2::Catch2>
@@ -28,6 +28,10 @@ if(WIN32)
         $<TARGET_FILE:Catch2::Catch2WithMain>
         $<TARGET_FILE_DIR:model_io_test>
     )
+    add_custom_command(TARGET model_io_test POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        $<TARGET_FILE:halfedges>
+        $<TARGET_FILE_DIR:model_io_test> )
 endif()
 
 list(APPEND CMAKE_MODULE_PATH ${catch2_SOURCE_DIR}/extras)
