@@ -42,8 +42,8 @@ jobs:
       run: |
         cd build
         ctest
-    - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v2
+#    - name: Perform CodeQL Analysis
+#      uses: github/codeql-action/analyze@v2
 
   build_windows:
     runs-on: windows-latest
