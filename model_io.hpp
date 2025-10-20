@@ -64,6 +64,12 @@ std::pair<std::size_t, std::size_t> parse_num_vertex_face(std::istream& off_file
 
 [[nodiscard]] std::vector<vertex> read_vertices(std::istream& off_file, std::size_t num_vert);
 
+[[nodiscard]]
+std::array<index, 3> parse_face(const std::string& line);
+
+[[nodiscard]]
+std::vector<index> read_faces(std::istream& off_file, std::size_t n_faces);
+
 void read_OFFfile(const std::string& name, std::vector<vertex>& m_vertices, std::vector<index>& faces);
 
 #if defined(HE_BUILD_TESTS)

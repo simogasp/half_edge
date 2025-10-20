@@ -1,5 +1,6 @@
 #include "model_io.hpp"
 
+
 #include <catch2/catch_all.hpp>
 
 #include <sstream>
@@ -199,7 +200,7 @@ TEST_CASE("read_vertices function", "[model_io]") {
     struct VertexTestCase {
         std::string name;
         std::string input;
-        int num_vertices;
+        std::size_t num_vertices;
         std::vector<half_edge::vertex> expected;
         bool should_throw;
     };
@@ -208,56 +209,56 @@ TEST_CASE("read_vertices function", "[model_io]") {
         {
             "Valid vertices",
             "1.0 2.0 3.0\n4.0 5.0 6.0\n7.0 8.0 9.0",
-            3,
+            3u,
             {{1.0, 2.0}, {4.0, 5.0}, {7.0, 8.0}},
             false
         },
         {
             "With comments and empty lines",
             "# Comment\n\n1.0 2.0 3.0\n\n# Another comment\n4.0 5.0 6.0",
-            2,
+            2u,
             {{1.0, 2.0}, {4.0, 5.0}},
             false
         },
         {
             "Invalid format - missing coordinate",
             "1.0 2.0\n4.0 5.0 6.0",
-            2,
+            2u,
             {},
             true
         },
         {
             "Invalid format - non-numeric input",
             "1.0 2.0 3.0\nabc def ghi",
-            2,
+            2u,
             {},
             true
         },
         {
             "Zero vertices requested",
             "1.0 2.0 3.0",
-            0,
+            0u,
             {},
             false
         },
         {
             "More input than requested vertices",
             "1.0 2.0 3.0\n4.0 5.0 6.0\n7.0 8.0 9.0",
-            2,
+            2u,
             {{1.0, 2.0}, {4.0, 5.0}},
             false
         },
         {
             "Fewer vertices than requested",
             "1.0 2.0 3.0\n4.0 5.0 6.0",
-            3,
+            3u,
             {{1.0, 2.0}, {4.0, 5.0}},
             false
         },
         {
             "Scientific notation",
             "1.0e1 2.0e-1 3.0\n-4.0e2 5.0e+1 6.0",
-            2,
+            2u,
             {{10.0, 0.2}, {-400.0, 50.0}},
             false
         }
@@ -280,4 +281,54 @@ TEST_CASE("read_vertices function", "[model_io]") {
         }
     }
 }
+
+
+TEST_CASE("parse_face function tests", "[parse_face]")
+{
+    using face_t = std::array<half_edge::index, 3>;
+    struct ParseFaceTestCase {
+        std::string input;
+        std::optional<face_t> expected_result;
+
+        ParseFaceTestCase(std::string in, const std::optional<face_t>& exp)
+            : input(std::move(in)), expected_result(exp) {}
+    };
+
+    const std::vector<ParseFaceTestCase> test_cases{
+        // Valid cases
+            {"0 1 2", face_t{0, 1, 2}},
+            {"10 20 30", face_t{10, 20, 30}},
+            {"999 888 777", face_t{999, 888, 777}},
+            {"1     2     3", face_t{1, 2, 3}},  // Extra spaces
+
+            // Invalid cases
+            {"", std::nullopt},  // Empty string
+            {"3", std::nullopt}, // Incomplete data
+            {"3 1 2 3", std::nullopt}, // Extra number, something fishy
+            {"a b c", std::nullopt}, // Non-numeric input
+            {"-1 2 3", std::nullopt}, // Negative index
+            {"1.5 2 3", std::nullopt}, // Floating point numbers
+            {"invalid", std::nullopt}, // Invalid format
+            {"3 1 abc", std::nullopt}, // Mixed valid/invalid data
+        };
+
+    for (const auto& test_case : test_cases)
+    {
+        SECTION("Input: '" + test_case.input + "'")
+        {
+            if (test_case.expected_result)
+            {
+                // Test cases where we expect successful parsing
+                const auto result = half_edge::parse_face(test_case.input);
+                REQUIRE(result == *test_case.expected_result);
+            }
+            else
+            {
+                // Test cases where we expect exceptions
+                REQUIRE_THROWS_AS(half_edge::parse_face(test_case.input), std::invalid_argument);
+            }
+        }
+    }
+}
+
 

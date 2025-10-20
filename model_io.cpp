@@ -23,7 +23,6 @@ bool has_valid_off_header(std::istream& off_file)
             return true;
         }
         return false;
-
     }
     return false;
 }
@@ -82,12 +81,62 @@ std::pair<std::size_t, std::size_t> parse_num_vertex_face(std::istream& off_file
     return vertices;
 }
 
+[[nodiscard]]
+std::array<index, 3> parse_face(const std::string& line)
+{
+    std::istringstream iss(line);
+    std::array<index, 3> face{};
+
+    for(auto& vertex_idx : face)
+    {
+        long long tmp;
+        iss >> tmp;
+        if(iss.fail())
+        {
+            throw std::invalid_argument("failed to parse the faces: " + line);
+        }
+        if(tmp < 0)
+        {
+            throw std::invalid_argument("face indices must be non-negative: " + line);
+        }
+        vertex_idx = static_cast<index>(tmp);
+    }
+    // if there are still characters in the stream, it means that the input is not good
+    if(!iss.eof())
+    {
+            throw std::invalid_argument("invalid input string: " + line);
+    }
+    return face;
+}
+
+[[nodiscard]]
+std::vector<index> read_faces(std::istream& off_file, std::size_t n_faces)
+{
+    std::vector<index> faces;
+    faces.reserve(3 * n_faces);
+
+    std::string line;
+    std::size_t processed_faces = 0;
+
+    while(processed_faces < n_faces && std::getline(off_file, line))
+    {
+        if(is_line_to_skip(line))
+        {
+            continue;
+        }
+
+        const auto face = parse_face(line);
+        std::ranges::copy(face, std::back_inserter(faces));
+        ++processed_faces;
+    }
+
+    return faces;
+}
+
 void read_OFFfile(const std::string& name, std::vector<vertex>& m_vertices, std::vector<index>& faces)
 {
     // Read the OFF file
-    std::string line;
     std::ifstream off_file(name);
-    std::string tmp;
 
     if(!off_file.is_open())
     {
@@ -104,29 +153,10 @@ void read_OFFfile(const std::string& name, std::vector<vertex>& m_vertices, std:
     // Read the number of vertices and faces
     const auto& [n_vertices, n_faces] = parse_num_vertex_face(off_file);
 
-
-    faces.reserve(3 * n_faces);
     // Read vertices
     m_vertices = read_vertices(off_file, n_vertices);
     // Read faces
-    std::size_t idx = 0;
-    while(idx < n_faces && std::getline(off_file, line))
-    {
-        std::istringstream(line) >> tmp;
-        if(is_line_to_skip(tmp))
-        {
-            continue;
-        }
-        std::size_t length;
-        std::size_t t1;
-        std::size_t t2;
-        std::size_t t3;
-        std::istringstream(line) >> length >> t1 >> t2 >> t3;
-        faces.push_back(t1);
-        faces.push_back(t2);
-        faces.push_back(t3);
-        idx++;
-    }
+    faces = read_faces(off_file, n_faces);
 
     off_file.close();
 }
