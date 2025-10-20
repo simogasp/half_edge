@@ -165,6 +165,14 @@ void Triangulation::construct_exterior_halfEdges()
     // with the origin and target inverted and add at the of HalfEdges vector
     // std::cout<<"Size vector: "<<HalfEdges.size()<<std::endl;
     this->n_half_edges = m_half_edges.size();
+
+    std::size_t border_count = 0;
+    for (std::size_t i = 0; i < this->n_half_edges; ++i)
+    {
+        if (m_half_edges.at(i).is_border) border_count++;
+    }
+    m_half_edges.reserve(m_half_edges.size() + border_count);
+
     // @FIXME there might be a problem with pushing back and indices as the vector grows and be reallocated
     for(std::size_t i = 0; i < this->n_half_edges; i++)
     {
