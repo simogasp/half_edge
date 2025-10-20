@@ -182,10 +182,18 @@ void Triangulation::construct_exterior_halfEdges()
             he_aux.twin = i;
             he_aux.origin = origin(next(i));
             he_aux.is_border = true;
+
+            // Calculate the future index directly
+            const std::size_t new_twin_index = m_half_edges.size();
             m_half_edges.at(i).is_border = false;
+            m_half_edges.at(i).twin = new_twin_index;
 
             m_half_edges.push_back(he_aux);
-            m_half_edges.at(i).twin = m_half_edges.size() - 1;
+
+            // This does not work on GCC in release as probably the compiler's static analysis
+            // is incorrectly flagging a potential buffer overflow during vector reallocation
+            // m_half_edges.push_back(he_aux);
+            // m_half_edges.at(i).twin = m_half_edges.size() - 1;
         }
     }
     // traverse the exterior edges and search their next prev halfedge
