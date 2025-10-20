@@ -130,7 +130,7 @@ void Triangulation::construct_interior_halfEdges_from_faces(const std::vector<in
     }
 
     // Calculate twin halfedge and boundary halfedges from set_edges
-    for(std::size_t i = 0; i < m_half_edges.size(); i++)
+    for(std::size_t i = 0; i < m_half_edges.size(); ++i)
     {
         // if halfedge has already a  twin skip
         if(m_half_edges.at(i).twin != NOT_A_TWIN)
@@ -174,7 +174,7 @@ void Triangulation::construct_exterior_halfEdges()
     m_half_edges.reserve(m_half_edges.size() + border_count);
 
     // @FIXME there might be a problem with pushing back and indices as the vector grows and be reallocated
-    for(std::size_t i = 0; i < this->n_half_edges; i++)
+    for(std::size_t i = 0; i < this->n_half_edges; ++i)
     {
         if(m_half_edges.at(i).is_border)
         {
@@ -190,7 +190,7 @@ void Triangulation::construct_exterior_halfEdges()
     }
     // traverse the exterior edges and search their next prev halfedge
     index nxtCCW, prvCCW;
-    for(std::size_t i = n_half_edges; i < m_half_edges.size(); i++)
+    for(std::size_t i = n_half_edges; i < m_half_edges.size(); ++i)
     {
         if(m_half_edges.at(i).is_border)
         {
