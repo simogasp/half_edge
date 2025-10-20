@@ -20,8 +20,14 @@ if(BUILD_SHARED_LIBS)
     endif()
 endif()
 
-set(CMAKE_CXX_STANDARD 23)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(HE_CXX_STANDARD 23)
+if(NOT DEFINED CMAKE_CXX_STANDARD)
+  set(CMAKE_CXX_STANDARD ${HE_CXX_STANDARD})
+  set(CMAKE_CXX_STANDARD_REQUIRED ON)
+endif()
+message(STATUS "Using C++ standard: ${CMAKE_CXX_STANDARD}")
+
+set(HE_CXX_FEATURE c_std_${CMAKE_CXX_STANDARD})
 
 # compile options for all targets depending on the compiler and the system
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang|GNU")
@@ -57,9 +63,13 @@ add_library(halfedges ${LIB_SOURCE_FILES} ${LIB_HEADER_FILES})
 target_include_directories(halfedges PUBLIC $<BUILD_INTERFACE:${LIBRARY_INCLUDE_DIR}>)
 target_compile_options(halfedges PRIVATE ${MY_COMPILE_OPTIONS})
 target_compile_definitions(halfedges PUBLIC ${MY_COMPILE_DEFINITIONS})
+target_compile_features(halfedges PUBLIC ${HE_CXX_FEATURE})
 
 add_executable(main main.cpp)
 target_link_libraries(main halfedges)
+target_compile_options(main PRIVATE ${MY_COMPILE_OPTIONS})
+target_compile_definitions(main PUBLIC ${MY_COMPILE_DEFINITIONS})
+target_compile_features(main PUBLIC ${HE_CXX_FEATURE})
 
 if(BUILD_TESTS)
 #     find_package(Boost COMPONENTS unit_test_framework REQUIRED)

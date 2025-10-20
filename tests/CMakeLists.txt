@@ -12,7 +12,9 @@ endif ()
 
 add_executable(model_io_test model_io_test.cpp)
 target_link_libraries(model_io_test PRIVATE Catch2::Catch2WithMain halfedges)
-
+target_compile_options(model_io_test PRIVATE ${MY_COMPILE_OPTIONS})
+target_compile_definitions(model_io_test PUBLIC ${MY_COMPILE_DEFINITIONS})
+target_compile_features(model_io_test PUBLIC ${HE_CXX_FEATURE})
 
 list(APPEND CMAKE_MODULE_PATH ${catch2_SOURCE_DIR}/extras)
 include(Catch)
