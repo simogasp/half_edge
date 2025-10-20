@@ -3,7 +3,13 @@
 
 #include <catch2/catch_all.hpp>
 
+#include <array>
+#include <cstddef>
+#include <optional>
 #include <sstream>
+#include <string>
+#include <utility>
+#include <vector>
 
 TEST_CASE("has_valid_off_header validation", "[off_header]")
 {
@@ -330,5 +336,3 @@ TEST_CASE("parse_face function tests", "[parse_face]")
         }
     }
 }
-
-

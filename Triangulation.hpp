@@ -1,8 +1,10 @@
 #pragma once
 
-#include <string>
-#include <vector>
+#include <cstddef>
 #include <limits>
+#include <string>
+#include <utility>
+#include <vector>
 
 namespace half_edge {
 using index = std::size_t;

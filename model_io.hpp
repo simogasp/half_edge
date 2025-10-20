@@ -3,7 +3,14 @@
 #include "Triangulation.hpp"
 
 #include <algorithm>
+#include <array>
+#include <cstddef>
+#include <istream>
+#include <ranges>
+#include <string>
 #include <string_view>
+#include <utility>
+#include <vector>
 
 namespace half_edge {
 constexpr auto OFF_HEADER{"OFF"};
@@ -18,7 +25,7 @@ constexpr bool is_space_char(char c) noexcept
 constexpr std::string_view trim_leading_whitespace(std::string_view str) noexcept
 {
     const auto first_non_space = std::ranges::find_if(str, [](char c) { return c != ' ' && c != '\t'; });
-    const auto distance = static_cast<size_t>(std::ranges::distance(str.begin(), first_non_space));
+    const auto distance = static_cast<std::size_t>(std::ranges::distance(str.begin(), first_non_space));
     str.remove_prefix(distance);
     return str;
 }
