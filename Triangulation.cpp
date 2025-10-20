@@ -189,17 +189,16 @@ void Triangulation::construct_exterior_halfEdges()
         }
     }
     // traverse the exterior edges and search their next prev halfedge
-    index nxtCCW, prvCCW;
     for(std::size_t i = n_half_edges; i < m_half_edges.size(); ++i)
     {
         if(m_half_edges.at(i).is_border)
         {
-            nxtCCW = CCW_edge_to_vertex(m_half_edges.at(i).twin);
+            index nxtCCW = CCW_edge_to_vertex(m_half_edges.at(i).twin);
             while(!m_half_edges.at(nxtCCW).is_border)
                 nxtCCW = this->CCW_edge_to_vertex(nxtCCW);
             m_half_edges.at(i).next = nxtCCW;
 
-            prvCCW = this->next(twin(i));
+            index prvCCW = this->next(twin(i));
             while(!m_half_edges.at(m_half_edges.at(prvCCW).twin).is_border)
                 prvCCW = this->CW_edge_to_vertex(prvCCW);
             m_half_edges.at(i).prev = m_half_edges.at(prvCCW).twin;
