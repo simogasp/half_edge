@@ -27,7 +27,7 @@ if(NOT DEFINED CMAKE_CXX_STANDARD)
 endif()
 message(STATUS "Using C++ standard: ${CMAKE_CXX_STANDARD}")
 
-set(HE_CXX_FEATURE c_std_${CMAKE_CXX_STANDARD})
+set(HE_CXX_FEATURE cxx_std_${CMAKE_CXX_STANDARD})
 
 # compile options for all targets depending on the compiler and the system
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang|GNU")
